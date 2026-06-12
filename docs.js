@@ -85,6 +85,17 @@ async function handleAsk(question) {
     const data = await postJson("/api/ask", { question });
     appendChatMessage("user", question);
     appendChatMessage("assistant", data.answer);
+
+    if (window.HistoryStore) {
+      HistoryStore.addRecord({
+        type: "ask",
+        input: { question },
+        response: { answer: data.answer },
+        searchMode: data.searchMode,
+      });
+      window.dispatchEvent(new CustomEvent("history:updated"));
+    }
+
     setStatus(askStatus, "", "");
     askInput.value = "";
   } catch (err) {

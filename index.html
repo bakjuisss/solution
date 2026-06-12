@@ -31,6 +31,7 @@
             <button type="button" class="nav-tab" data-panel="search">문서 찾기</button>
             <button type="button" class="nav-tab" data-panel="nb114">문의 이력</button>
             <button type="button" class="nav-tab" data-panel="support">장애·민원</button>
+            <button type="button" class="nav-tab" data-panel="history">내 이력</button>
           </nav>
         </div>
       </div>
@@ -182,6 +183,46 @@
 
         <div id="support-results" class="support-results hidden" aria-live="polite"></div>
       </section>
+
+      <section id="panel-history" class="panel hidden" aria-label="내 이력">
+        <div class="panel-toolbar history-toolbar">
+          <form id="history-form" class="search-form" role="search">
+            <label for="history-input" class="visually-hidden">이력 검색</label>
+            <input id="history-input" type="search" placeholder="키워드 검색 (증상, 민원, 질문 등)" autocomplete="off" maxlength="200">
+            <select id="history-type" aria-label="유형 필터">
+              <option value="">전체</option>
+              <option value="incident">장애</option>
+              <option value="complaint">민원</option>
+              <option value="ask">질문</option>
+            </select>
+            <button type="submit">검색</button>
+          </form>
+          <div class="history-toolbar-actions">
+            <button type="button" id="history-export-btn" class="btn-secondary">보내기</button>
+            <label class="btn-secondary file-btn">
+              가져오기
+              <input type="file" id="history-import-input" accept=".json,application/json" hidden>
+            </label>
+            <button type="button" id="history-clear-btn" class="btn-danger-text">전체 삭제</button>
+          </div>
+        </div>
+
+        <div id="history-status" class="status" role="status" aria-live="polite"></div>
+
+        <section id="history-welcome" class="welcome">
+          <h2>장애·민원·질문 이력</h2>
+          <p>대응안 생성과 질문 답변이 자동으로 저장됩니다. 이 브라우저에 보관되며,보내기로 백업할 수 있습니다.</p>
+          <div class="suggestions">
+            <button type="button" class="suggestion-chip" data-history-filter="incident">장애만</button>
+            <button type="button" class="suggestion-chip" data-history-filter="complaint">민원만</button>
+            <button type="button" class="suggestion-chip" data-history-filter="ask">질문만</button>
+          </div>
+        </section>
+
+        <section id="history-results" class="search-results hidden">
+          <div id="history-list" class="history-list"></div>
+        </section>
+      </section>
     </main>
 
     <footer class="footer">
@@ -189,9 +230,11 @@
     </footer>
   </div>
 
+  <script src="history-store.js"></script>
   <script src="app.js"></script>
   <script src="docs.js"></script>
   <script src="nb114.js"></script>
   <script src="support.js"></script>
+  <script src="history.js"></script>
 </body>
 </html>

@@ -23,6 +23,12 @@ const PANELS = {
     subtitle: "메뉴얼 기반 장애 조치 · 민원 응대안",
     footer: "대응안은 인덱싱된 메뉴얼·Runbook 기준이며, 현장 상황에 맞게 검증 후 적용하세요.",
   },
+  history: {
+    el: document.getElementById("panel-history"),
+    title: "내 대응 이력",
+    subtitle: "장애·민원·질문 저장 · 검색 · 불러오기",
+    footer: "이력은 이 브라우저에 저장됩니다.보내기로 백업하거나 다른 PC에서 가져올 수 있습니다.",
+  },
 };
 
 let activePanel = "ask";
@@ -46,6 +52,10 @@ function switchPanel(name) {
   document.title = meta.title;
   document.getElementById("brand-subtitle").textContent = meta.subtitle;
   document.getElementById("footer-text").textContent = meta.footer;
+
+  if (name === "history" && window.HistoryUI) {
+    window.HistoryUI.refreshHistory();
+  }
 }
 
 document.querySelectorAll(".nav-tab").forEach((tab) => {

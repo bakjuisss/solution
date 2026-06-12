@@ -204,7 +204,17 @@ async function handleRespond(mode, payload, btn) {
     supportResults.innerHTML =
       mode === "incident" ? renderIncidentResponse(data) : renderComplaintResponse(data);
 
-    setSupportStatus("", "");
+    if (window.HistoryStore) {
+      HistoryStore.addRecord({
+        type: mode,
+        input: data.input || payload,
+        response: data.response,
+        searchMode: data.searchMode,
+      });
+      window.dispatchEvent(new CustomEvent("history:updated"));
+    }
+
+    setSupportStatus("대응안을 생성했으며 이력에 저장했습니다.", "");
     supportResults.scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (err) {
     setSupportStatus(err.message, "error");
