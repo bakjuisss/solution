@@ -1,5 +1,10 @@
 const { retrieve } = require("../lib/retriever");
 const { generateAnswer, setCorsHeaders, handlePreflight } = require("../lib/gemini");
+const {
+  filterResultsForContext,
+  pickSourcesFromAnswer,
+  toSourcePayload,
+} = require("../lib/query-utils");
 
 module.exports = async function handler(req, res) {
   if (handlePreflight(req, res)) return;
@@ -33,36 +38,37 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const topK = Math.min(Math.max(Number(body?.topK) || 6, 3), 10);
-    const { results } = await retrieve(apiKey, question, { topK });
+    const topK = Math.min(Math.max(Number(body?.topK) || 8, 4), 12);
+    const { results, mode } = await retrieve(apiKey, question, { topK });
+    const contextResults = filterResultsForContext(results, question, { maxCount: 4 });
 
-    if (!results.length) {
+    if (!contextResults.length) {
       return res.status(200).json({
         answer: "제공된 문서에서 해당 정보를 찾을 수 없습니다.",
         sources: [],
         query: question,
+        searchMode: mode,
       });
     }
 
-    const answerResult = await generateAnswer(apiKey, question, results);
+    const answerResult = await generateAnswer(apiKey, question, contextResults);
     if (!answerResult.ok) {
       const { status, body: errBody } = answerResult.error;
       return res.status(status).json(errBody);
     }
 
-    const sources = results.map((item) => ({
-      fileName: item.fileName,
-      title: item.title,
-      page: item.page,
-      section: item.section,
-      excerpt: item.excerpt,
-      score: item.score,
-    }));
+    const citedSources = pickSourcesFromAnswer(
+      answerResult.answer,
+      contextResults,
+      contextResults
+    );
+    const sources = citedSources.map(toSourcePayload);
 
     return res.status(200).json({
       answer: answerResult.answer,
       sources,
       query: question,
+      searchMode: mode,
     });
   } catch (err) {
     const message = err.message || "질문 처리 중 오류가 발생했습니다.";

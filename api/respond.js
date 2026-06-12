@@ -1,5 +1,6 @@
 const { retrieve } = require("../lib/retriever");
 const { generateStructuredResponse, setCorsHeaders, handlePreflight } = require("../lib/gemini");
+const { filterResultsForContext, toSourcePayload } = require("../lib/query-utils");
 
 function buildSearchQuery(mode, body) {
   const solution = String(body.solution || "").trim();
@@ -86,8 +87,9 @@ module.exports = async function handler(req, res) {
     const searchQuery = buildSearchQuery(mode, body);
     const topK = Math.min(Math.max(Number(body?.topK) || 8, 4), 12);
     const { results, mode: searchMode } = await retrieve(apiKey, searchQuery, { topK });
+    const contextResults = filterResultsForContext(results, searchQuery, { maxCount: 5 });
 
-    if (!results.length) {
+    if (!contextResults.length) {
       return res.status(200).json({
         mode,
         input,
@@ -116,20 +118,13 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const answerResult = await generateStructuredResponse(apiKey, mode, input, results);
+    const answerResult = await generateStructuredResponse(apiKey, mode, input, contextResults);
     if (!answerResult.ok) {
       const { status, body: errBody } = answerResult.error;
       return res.status(status).json(errBody);
     }
 
-    const sources = results.map((item) => ({
-      fileName: item.fileName,
-      title: item.title,
-      page: item.page,
-      section: item.section,
-      excerpt: item.excerpt,
-      score: item.score,
-    }));
+    const sources = contextResults.slice(0, 3).map(toSourcePayload);
 
     return res.status(200).json({
       mode,

@@ -2,7 +2,8 @@ const assert = require("assert");
 const path = require("path");
 const { splitIntoChunks } = require("../lib/chunker");
 const { parseDocument } = require("../lib/parsers");
-const { rankChunksKeywordOnly, keywordScore } = require("../lib/retriever");
+const { rankChunksKeywordOnly } = require("../lib/retriever");
+const { keywordScore } = require("../lib/query-utils");
 
 const SAMPLE = path.join(__dirname, "..", "data", "docs", "sample-pcguard-guide.md");
 

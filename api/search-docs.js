@@ -1,5 +1,6 @@
 const { retrieve } = require("../lib/retriever");
 const { setCorsHeaders, handlePreflight } = require("../lib/gemini");
+const { filterResultsForContext, toSourcePayload } = require("../lib/query-utils");
 
 module.exports = async function handler(req, res) {
   if (handlePreflight(req, res)) return;
@@ -34,19 +35,16 @@ module.exports = async function handler(req, res) {
 
   try {
     const topK = Math.min(Math.max(Number(body?.topK) || 10, 5), 20);
-    const { results, totalChunks } = await retrieve(apiKey, query, { topK });
+    const { results, totalChunks, mode } = await retrieve(apiKey, query, { topK });
+    const filtered = filterResultsForContext(results, query, { maxCount: 10 });
 
     return res.status(200).json({
       query,
       totalChunks,
-      results: results.map((item) => ({
-        fileName: item.fileName,
-        title: item.title,
-        page: item.page,
-        section: item.section,
-        excerpt: item.excerpt,
+      searchMode: mode,
+      results: filtered.map((item) => ({
+        ...toSourcePayload(item),
         content: item.content,
-        score: item.score,
         vectorScore: item.vectorScore,
         keywordScore: item.keywordScore,
       })),
