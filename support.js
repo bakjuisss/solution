@@ -273,3 +273,22 @@ complaintForm.addEventListener("submit", (e) => {
 });
 
 bindPresetChips();
+
+window.addEventListener("nb114:use-case", (event) => {
+  const detail = event.detail || {};
+  switchSupportMode(detail.mode || "incident");
+
+  if (detail.mode === "complaint") {
+    document.getElementById("complaint-solution").value = detail.solution || "";
+    document.getElementById("complaint-content").value = detail.content || "";
+    document.getElementById("complaint-request").value = detail.request || "";
+    document.getElementById("complaint-environment").value = detail.environment || "";
+  } else {
+    document.getElementById("incident-solution").value = detail.solution || "";
+    document.getElementById("incident-symptom").value = detail.symptom || detail.content || "";
+    document.getElementById("incident-environment").value = detail.environment || "";
+    document.getElementById("incident-impact").value = detail.impact || "";
+  }
+
+  setSupportStatus("nb114 문의 사례를 불러왔습니다. 대응안 생성을 눌러 주세요.", "");
+});

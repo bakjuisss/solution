@@ -8,6 +8,9 @@ const { filterResultsForContext, keywordScore } = require("../lib/query-utils");
 
 const SAMPLE = path.join(__dirname, "..", "data", "docs", "sample-pcguard-guide.md");
 const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
+const NB114_INDEX_PATH = path.join(__dirname, "..", "data", "nb114-index.json");
+const { ensureHttpsBaseUrl } = require("../lib/nb114-client");
+const { normalizeInquiries } = require("../lib/nb114-normalize");
 
 async function main() {
   console.log("로컬 검증 시작...\n");
@@ -59,6 +62,22 @@ async function main() {
     console.log(
       `✓ PDF 인덱스(보호자): ${guardianResults.length}건, 문서 ${index.documentCount}개`
     );
+  }
+
+  assert.equal(ensureHttpsBaseUrl("http://nb114.co.kr"), "https://nb114.co.kr");
+  assert.equal(ensureHttpsBaseUrl("nb114.co.kr"), "https://nb114.co.kr");
+  console.log("✓ nb114 HTTPS URL 정규화");
+
+  const samplePayload = { data: [{ id: "T1", question: "테스트", response: "응대" }] };
+  assert.equal(normalizeInquiries(samplePayload).length, 1);
+  console.log("✓ nb114 응답 정규화");
+
+  if (fs.existsSync(NB114_INDEX_PATH)) {
+    const nb114Index = JSON.parse(fs.readFileSync(NB114_INDEX_PATH, "utf8"));
+    const nb114Results = rankChunksKeywordOnly(nb114Index.chunks, "보호자", 5);
+    assert.ok(nb114Results.length > 0, "nb114 인덱스 검색 결과 없음");
+    assert.equal(nb114Results[0].sourceType, "nb114");
+    console.log(`✓ nb114 인덱스: ${nb114Index.inquiryCount}건, ${nb114Index.chunkCount}청크`);
   }
 
   console.log("\n모든 로컬 검증 통과");

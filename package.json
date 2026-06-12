@@ -4,6 +4,8 @@
   "scripts": {
     "index-docs": "node scripts/index-docs.js",
     "index-docs:offline": "node scripts/index-docs.js --no-embed",
+    "sync-nb114": "node scripts/sync-nb114.js",
+    "index-nb114": "node scripts/index-nb114.js --no-embed",
     "build": "node scripts/vercel-build.js",
     "validate": "node scripts/validate-local.js"
   },

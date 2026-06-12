@@ -6,7 +6,7 @@
   "functions": {
     "api/*.js": {
       "maxDuration": 60,
-      "includeFiles": "lib/**,data/index.json"
+      "includeFiles": "lib/**,data/index.json,data/nb114/**,data/nb114-index.json"
     }
   }
 }

@@ -3,26 +3,11 @@ const path = require("path");
 const { parseDocument, getSupportedExtensions } = require("../lib/parsers");
 const { splitIntoChunks } = require("../lib/chunker");
 const { embedBatch, EMBEDDING_MODEL, OUTPUT_DIMENSIONALITY } = require("../lib/embeddings");
+const { loadEnv } = require("../lib/env");
 
 const ROOT = path.join(__dirname, "..");
 const DOCS_DIR = path.join(ROOT, "data", "docs");
 const INDEX_PATH = path.join(ROOT, "data", "index.json");
-
-function loadEnv() {
-  const envPath = path.join(ROOT, ".env");
-  if (!fs.existsSync(envPath)) return;
-
-  const lines = fs.readFileSync(envPath, "utf8").split("\n");
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#")) continue;
-    const eq = trimmed.indexOf("=");
-    if (eq === -1) continue;
-    const key = trimmed.slice(0, eq).trim();
-    const value = trimmed.slice(eq + 1).trim();
-    if (!process.env[key]) process.env[key] = value;
-  }
-}
 
 function collectFiles(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -46,7 +31,7 @@ function collectFiles(dir) {
 }
 
 async function main() {
-  loadEnv();
+  loadEnv(ROOT);
 
   const noEmbed = process.argv.includes("--no-embed");
   const apiKey = process.env.GEMINI_API_KEY;

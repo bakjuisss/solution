@@ -666,6 +666,111 @@ body {
   font-size: 0.85rem;
 }
 
+.nb114-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.nb114-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  box-shadow: var(--shadow-card);
+}
+
+.nb114-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.nb114-card-header h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+
+.nb114-meta {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.nb114-badge {
+  flex-shrink: 0;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.nb114-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.nb114-tag {
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: var(--bg-muted);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.nb114-section {
+  margin-bottom: 0.75rem;
+}
+
+.nb114-section h4 {
+  margin: 0 0 0.25rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.nb114-section p {
+  margin: 0;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+}
+
+.nb114-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.nb114-use-btn {
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--primary);
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.nb114-use-btn:hover {
+  background: var(--primary-soft);
+}
+
+#nb114-solution {
+  min-width: 130px;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
 @media (max-width: 640px) {
   .search-form, .chat-form { flex-direction: column; }
   .header-top { flex-direction: column; align-items: flex-start; }

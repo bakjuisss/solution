@@ -11,6 +11,12 @@ const PANELS = {
     subtitle: "키워드 검색 · 관련 구간 · 출처 확인",
     footer: "검색 결과는 임베딩·키워드 기반으로 정렬됩니다.",
   },
+  nb114: {
+    el: document.getElementById("panel-nb114"),
+    title: "nb114 문의 이력",
+    subtitle: "과거 문의응대 · 유사 사례 검색",
+    footer: "nb114 문의응대 이력과 메뉴얼을 함께 참고해 AI가 답변합니다.",
+  },
   support: {
     el: document.getElementById("panel-support"),
     title: "장애·민원 대응",
