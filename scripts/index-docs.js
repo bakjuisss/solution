@@ -158,6 +158,13 @@ async function main() {
     console.log(`  실패: ${failures.length}개`);
     process.exit(1);
   }
+
+  console.log("\n[Vercel 배포 안내]");
+  console.log("  웹 검색은 data/docs PDF가 아니라 data/index.json 만 사용합니다.");
+  console.log("  아래를 실행한 뒤 Vercel이 재배포되면 검색에 반영됩니다:");
+  console.log("    git add data/index.json");
+  console.log('    git commit -m "문서 인덱스 갱신"');
+  console.log("    git push origin main");
 }
 
 main().catch((err) => {

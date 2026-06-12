@@ -36,7 +36,10 @@ module.exports = async function handler(req, res) {
   try {
     const topK = Math.min(Math.max(Number(body?.topK) || 10, 5), 20);
     const { results, totalChunks, mode } = await retrieve(apiKey, query, { topK });
-    const filtered = filterResultsForContext(results, query, { maxCount: 10 });
+    const filtered = filterResultsForContext(results, query, {
+      maxCount: 10,
+      keywordOnly: mode === "keyword",
+    });
 
     return res.status(200).json({
       query,

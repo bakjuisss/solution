@@ -87,7 +87,10 @@ module.exports = async function handler(req, res) {
     const searchQuery = buildSearchQuery(mode, body);
     const topK = Math.min(Math.max(Number(body?.topK) || 8, 4), 12);
     const { results, mode: searchMode } = await retrieve(apiKey, searchQuery, { topK });
-    const contextResults = filterResultsForContext(results, searchQuery, { maxCount: 5 });
+    const contextResults = filterResultsForContext(results, searchQuery, {
+      maxCount: 5,
+      keywordOnly: searchMode === "keyword",
+    });
 
     if (!contextResults.length) {
       return res.status(200).json({

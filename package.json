@@ -4,6 +4,7 @@
   "scripts": {
     "index-docs": "node scripts/index-docs.js",
     "index-docs:offline": "node scripts/index-docs.js --no-embed",
+    "build": "node scripts/vercel-build.js",
     "validate": "node scripts/validate-local.js"
   },
   "dependencies": {

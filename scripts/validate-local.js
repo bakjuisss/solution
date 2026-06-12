@@ -1,11 +1,13 @@
 const assert = require("assert");
+const fs = require("fs");
 const path = require("path");
 const { splitIntoChunks } = require("../lib/chunker");
 const { parseDocument } = require("../lib/parsers");
 const { rankChunksKeywordOnly } = require("../lib/retriever");
-const { keywordScore } = require("../lib/query-utils");
+const { filterResultsForContext, keywordScore } = require("../lib/query-utils");
 
 const SAMPLE = path.join(__dirname, "..", "data", "docs", "sample-pcguard-guide.md");
+const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
 
 async function main() {
   console.log("로컬 검증 시작...\n");
@@ -44,6 +46,20 @@ async function main() {
   const missResults = rankChunksKeywordOnly(indexed, "존재하지않는내용xyz", 3);
   assert.equal(missResults.length, 0, "무관한 검색에 결과가 나옴");
   console.log("✓ 무관 검색: 결과 없음 (정상)");
+
+  if (fs.existsSync(INDEX_PATH)) {
+    const index = JSON.parse(fs.readFileSync(INDEX_PATH, "utf8"));
+    const guardianResults = rankChunksKeywordOnly(index.chunks, "보호자", 5);
+    assert.ok(guardianResults.length > 0, "인덱스에서 '보호자' 검색 결과 없음");
+    const context = filterResultsForContext(guardianResults, "보호자", {
+      maxCount: 4,
+      keywordOnly: true,
+    });
+    assert.ok(context.length > 0, "보호자 컨텍스트 필터 결과 없음");
+    console.log(
+      `✓ PDF 인덱스(보호자): ${guardianResults.length}건, 문서 ${index.documentCount}개`
+    );
+  }
 
   console.log("\n모든 로컬 검증 통과");
 }

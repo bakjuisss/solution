@@ -40,7 +40,10 @@ module.exports = async function handler(req, res) {
   try {
     const topK = Math.min(Math.max(Number(body?.topK) || 8, 4), 12);
     const { results, mode } = await retrieve(apiKey, question, { topK });
-    const contextResults = filterResultsForContext(results, question, { maxCount: 4 });
+    const contextResults = filterResultsForContext(results, question, {
+      maxCount: 4,
+      keywordOnly: mode === "keyword",
+    });
 
     if (!contextResults.length) {
       return res.status(200).json({
