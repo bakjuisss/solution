@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0e1a">
+  <meta name="color-scheme" content="dark">
+  <title>솔루션 문서 Q&A</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
+
+    <header class="header">
+      <div class="header-inner">
+        <div class="header-top">
+          <div class="brand">
+            <div class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 4h9l3 3v13H6V4z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div>
+              <h1 class="brand-title">솔루션 문서 Q&A</h1>
+              <p id="brand-subtitle" class="brand-subtitle">메뉴얼 검색 · AI 질문 답변 · 출처 인용</p>
+            </div>
+          </div>
+
+          <nav class="main-nav" aria-label="메인 메뉴">
+            <button type="button" class="nav-tab active" data-panel="ask">질문하기</button>
+            <button type="button" class="nav-tab" data-panel="search">문서 찾기</button>
+            <button type="button" class="nav-tab" data-panel="support">장애·민원</button>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <section id="panel-ask" class="panel panel-active" aria-label="질문하기">
+        <div id="ask-status" class="status" role="status" aria-live="polite"></div>
+
+        <section id="ask-welcome" class="welcome">
+          <h2>솔루션 메뉴얼에 대해 물어보세요</h2>
+          <p>인덱싱된 문서를 기반으로 AI가 답변하고, 관련 출처(파일명·페이지)를 함께 보여줍니다.</p>
+          <div class="suggestions">
+            <button type="button" class="suggestion-chip" data-ask="PCGuard 설치 절차를 알려주세요">PCGuard 설치 절차</button>
+            <button type="button" class="suggestion-chip" data-ask="라이선스 등록 방법은?">라이선스 등록 방법</button>
+            <button type="button" class="suggestion-chip" data-ask="에이전트 배포 방법">에이전트 배포</button>
+          </div>
+        </section>
+
+        <div id="ask-chat" class="chat hidden" aria-live="polite"></div>
+
+        <form id="ask-form" class="chat-form" role="search">
+          <label for="ask-input" class="visually-hidden">질문 입력</label>
+          <input id="ask-input" type="text" placeholder="예: PCGuard 관리 서버 설치 방법" autocomplete="off" maxlength="500">
+          <button type="submit" id="ask-btn">질문</button>
+        </form>
+      </section>
+
+      <section id="panel-search" class="panel hidden" aria-label="문서 찾기">
+        <div class="panel-toolbar">
+          <form id="search-form" class="search-form" role="search">
+            <label for="search-input" class="visually-hidden">문서 검색</label>
+            <input id="search-input" type="search" placeholder="키워드로 관련 구간 검색 (예: 방화벽 포트)" autocomplete="off" maxlength="200">
+            <button type="submit" id="search-btn">검색</button>
+          </form>
+        </div>
+
+        <div id="search-status" class="status" role="status" aria-live="polite"></div>
+
+        <section id="search-welcome" class="welcome">
+          <h2>메뉴얼에서 관련 구간 찾기</h2>
+          <p>키워드나 문장으로 검색하면 관련 문서 발췌문과 출처를 보여줍니다.</p>
+        </section>
+
+        <section id="search-results" class="search-results hidden">
+          <div class="results-header">
+            <h2 id="search-results-title">검색 결과</h2>
+          </div>
+          <div id="search-list" class="search-list"></div>
+        </section>
+      </section>
+
+      <section id="panel-support" class="panel hidden" aria-label="장애·민원 대응">
+        <div class="support-mode-nav" role="tablist" aria-label="대응 유형">
+          <button type="button" class="support-mode-tab active" data-support-mode="incident" role="tab" aria-selected="true">장애 대응</button>
+          <button type="button" class="support-mode-tab" data-support-mode="complaint" role="tab" aria-selected="false">민원 대응</button>
+        </div>
+
+        <div id="support-status" class="status" role="status" aria-live="polite"></div>
+
+        <section id="support-welcome" class="welcome welcome-compact">
+          <h2 id="support-welcome-title">장애 대응 방안 생성</h2>
+          <p id="support-welcome-desc">메뉴얼·Runbook을 검색해 증상별 확인 순서, 조치, 에스컬레이션 기준을 제안합니다.</p>
+          <div class="suggestions" id="support-suggestions">
+            <button type="button" class="suggestion-chip" data-support-preset="incident-agent">에이전트 연결 실패</button>
+            <button type="button" class="suggestion-chip" data-support-preset="incident-license">라이선스 오류</button>
+          </div>
+        </section>
+
+        <form id="incident-form" class="support-form">
+          <div class="form-grid">
+            <label class="form-field">
+              <span>솔루션명</span>
+              <input type="text" id="incident-solution" placeholder="예: PCGuard" maxlength="100">
+            </label>
+            <label class="form-field">
+              <span>영향 범위</span>
+              <select id="incident-impact">
+                <option value="">선택 (선택사항)</option>
+                <option value="단일 PC">단일 PC</option>
+                <option value="부서/그룹">부서/그룹</option>
+                <option value="전사">전사</option>
+              </select>
+            </label>
+            <label class="form-field form-field-full">
+              <span>증상 <em class="required">*</em></span>
+              <textarea id="incident-symptom" rows="3" placeholder="예: 에이전트가 관리 서버에 연결되지 않습니다. 방화벽은 열어둔 상태입니다." maxlength="500" required></textarea>
+            </label>
+            <label class="form-field form-field-full">
+              <span>고객 환경</span>
+              <input type="text" id="incident-environment" placeholder="예: Windows 11, 관리서버 2019, 내부망" maxlength="200">
+            </label>
+          </div>
+          <button type="submit" id="incident-btn" class="submit-btn">장애 대응안 생성</button>
+        </form>
+
+        <form id="complaint-form" class="support-form hidden">
+          <div class="form-grid">
+            <label class="form-field">
+              <span>솔루션명</span>
+              <input type="text" id="complaint-solution" placeholder="예: PCGuard" maxlength="100">
+            </label>
+            <label class="form-field form-field-full">
+              <span>민원 내용 <em class="required">*</em></span>
+              <textarea id="complaint-content" rows="3" placeholder="예: 설치 후 PC가 느려졌다고 합니다. 제거 방법을 문의합니다." maxlength="500" required></textarea>
+            </label>
+            <label class="form-field form-field-full">
+              <span>고객 요청</span>
+              <input type="text" id="complaint-request" placeholder="예: 원인 설명 및 해결 방법 안내 요청" maxlength="200">
+            </label>
+            <label class="form-field form-field-full">
+              <span>고객 환경</span>
+              <input type="text" id="complaint-environment" placeholder="예: 공공기관, Windows 10 500대" maxlength="200">
+            </label>
+          </div>
+          <button type="submit" id="complaint-btn" class="submit-btn">민원 대응안 생성</button>
+        </form>
+
+        <div id="support-results" class="support-results hidden" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p id="footer-text">AI 답변은 인덱싱된 메뉴얼을 기준으로 하며, 공식 문서와 반드시 대조해 확인하세요.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="docs.js"></script>
+  <script src="support.js"></script>
+</body>
+</html>

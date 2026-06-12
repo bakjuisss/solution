@@ -1,0 +1,14 @@
+{
+  "name": "solution-docs-qa",
+  "private": true,
+  "scripts": {
+    "index-docs": "node scripts/index-docs.js",
+    "index-docs:offline": "node scripts/index-docs.js --no-embed",
+    "validate": "node scripts/validate-local.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "mammoth": "^1.8.0",
+    "pdf-parse": "^1.1.1"
+  }
+}
