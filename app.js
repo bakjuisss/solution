@@ -2,8 +2,8 @@ const PANELS = {
   ask: {
     el: document.getElementById("panel-ask"),
     title: "솔루션 문서 Q&A",
-    subtitle: "메뉴얼 검색 · AI 질문 답변 · 출처 인용",
-    footer: "AI 답변은 인덱싱된 메뉴얼을 기준으로 하며, 공식 문서와 반드시 대조해 확인하세요.",
+    subtitle: "메뉴얼 검색 · AI 질문 답변",
+    footer: "AI가 문서를 참고해 답변합니다. 공식 문서와 반드시 대조해 확인하세요.",
   },
   search: {
     el: document.getElementById("panel-search"),

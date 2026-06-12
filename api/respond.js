@@ -1,6 +1,6 @@
 const { retrieve } = require("../lib/retriever");
 const { generateStructuredResponse, setCorsHeaders, handlePreflight } = require("../lib/gemini");
-const { filterResultsForContext, toSourcePayload } = require("../lib/query-utils");
+const { filterResultsForContext } = require("../lib/query-utils");
 
 function buildSearchQuery(mode, body) {
   const solution = String(body.solution || "").trim();
@@ -116,7 +116,6 @@ module.exports = async function handler(req, res) {
                 followUp: "확인 후 고객에게 회신 일정 안내",
               }),
         },
-        sources: [],
         searchMode,
       });
     }
@@ -127,13 +126,10 @@ module.exports = async function handler(req, res) {
       return res.status(status).json(errBody);
     }
 
-    const sources = contextResults.slice(0, 3).map(toSourcePayload);
-
     return res.status(200).json({
       mode,
       input,
       response: answerResult.response,
-      sources,
       searchMode,
     });
   } catch (err) {

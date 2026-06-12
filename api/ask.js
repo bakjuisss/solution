@@ -1,10 +1,6 @@
 const { retrieve } = require("../lib/retriever");
 const { generateAnswer, setCorsHeaders, handlePreflight } = require("../lib/gemini");
-const {
-  filterResultsForContext,
-  pickSourcesFromAnswer,
-  toSourcePayload,
-} = require("../lib/query-utils");
+const { filterResultsForContext } = require("../lib/query-utils");
 
 module.exports = async function handler(req, res) {
   if (handlePreflight(req, res)) return;
@@ -48,7 +44,6 @@ module.exports = async function handler(req, res) {
     if (!contextResults.length) {
       return res.status(200).json({
         answer: "제공된 문서에서 해당 정보를 찾을 수 없습니다.",
-        sources: [],
         query: question,
         searchMode: mode,
       });
@@ -60,16 +55,8 @@ module.exports = async function handler(req, res) {
       return res.status(status).json(errBody);
     }
 
-    const citedSources = pickSourcesFromAnswer(
-      answerResult.answer,
-      contextResults,
-      contextResults
-    );
-    const sources = citedSources.map(toSourcePayload);
-
     return res.status(200).json({
       answer: answerResult.answer,
-      sources,
       query: question,
       searchMode: mode,
     });

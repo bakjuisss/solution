@@ -85,23 +85,6 @@ function renderList(items, emptyText = "항목 없음") {
   return `<ol class="response-list">${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ol>`;
 }
 
-function renderSources(sources) {
-  if (!sources?.length) return "";
-  const cards = sources
-    .map(
-      (src) => `
-      <div class="source-card">
-        <div class="source-meta">
-          <span class="source-file">${escapeHtml(src.fileName)}${src.page ? ` · p.${src.page}` : ""}</span>
-          <span class="source-score">${Math.round((src.score || 0) * 100)}%</span>
-        </div>
-        <p class="source-excerpt">${escapeHtml(src.excerpt || "")}</p>
-      </div>`
-    )
-    .join("");
-  return `<div class="sources-block"><h4>참고 문서</h4>${cards}</div>`;
-}
-
 function renderIncidentResponse(data) {
   const r = data.response;
   const severity = SEVERITY_LABEL[r.severity] || r.severity || "보통";
@@ -112,7 +95,7 @@ function renderIncidentResponse(data) {
         <h3>장애 대응안</h3>
         <span class="severity-badge severity-${r.severity || "medium"}">${escapeHtml(severity)}</span>
       </div>
-      ${r.docNotFound ? '<p class="doc-warning">문서에서 직접적인 근거를 찾지 못했습니다. 담당자 확인이 필요합니다.</p>' : ""}
+      ${r.docNotFound ? '<p class="doc-warning">관련 문서를 찾지 못했습니다. 담당자 확인이 필요합니다.</p>' : ""}
       <section class="response-section">
         <h4>증상 요약</h4>
         <p>${escapeHtml(r.summary || "")}</p>
@@ -137,7 +120,6 @@ function renderIncidentResponse(data) {
         <h4>고객 안내 요약</h4>
         <p>${escapeHtml(r.customerNote || "")}</p>
       </section>
-      ${renderSources(data.sources)}
     </article>`;
 }
 
@@ -149,7 +131,7 @@ function renderComplaintResponse(data) {
       <div class="response-header">
         <h3>민원 대응안</h3>
       </div>
-      ${r.docNotFound ? '<p class="doc-warning">문서에서 직접적인 근거를 찾지 못했습니다. 담당 부서 확인이 필요합니다.</p>' : ""}
+      ${r.docNotFound ? '<p class="doc-warning">관련 문서를 찾지 못했습니다. 담당 부서 확인이 필요합니다.</p>' : ""}
       <section class="response-section">
         <h4>민원 요약</h4>
         <p>${escapeHtml(r.summary || "")}</p>
@@ -174,7 +156,6 @@ function renderComplaintResponse(data) {
         <h4>후속 안내</h4>
         <p>${escapeHtml(r.followUp || "")}</p>
       </section>
-      ${renderSources(data.sources)}
     </article>`;
 }
 

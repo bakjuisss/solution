@@ -48,26 +48,7 @@ function formatMeta(item) {
   return parts.join(" · ");
 }
 
-function renderSources(sources) {
-  if (!sources?.length) return "";
-
-  const cards = sources
-    .map(
-      (src) => `
-      <div class="source-card">
-        <div class="source-meta">
-          <span class="source-file">${escapeHtml(formatMeta(src))}</span>
-          <span class="source-score">관련도 ${Math.round((src.score || 0) * 100)}%</span>
-        </div>
-        <p class="source-excerpt">${escapeHtml(src.excerpt || "")}</p>
-      </div>`
-    )
-    .join("");
-
-  return `<div class="sources-block"><h4>출처</h4>${cards}</div>`;
-}
-
-function appendChatMessage(role, content, sources = []) {
+function appendChatMessage(role, content) {
   askWelcome.classList.add("hidden");
   askChat.classList.remove("hidden");
 
@@ -76,7 +57,6 @@ function appendChatMessage(role, content, sources = []) {
     <div class="chat-message ${isUser ? "chat-user" : "chat-assistant"}">
       <div class="chat-role">${isUser ? "질문" : "답변"}</div>
       <div class="chat-body">${isUser ? escapeHtml(content) : escapeHtml(content).replace(/\n/g, "<br>")}</div>
-      ${!isUser ? renderSources(sources) : ""}
     </div>`;
 
   askChat.insertAdjacentHTML("beforeend", html);
@@ -104,7 +84,7 @@ async function handleAsk(question) {
   try {
     const data = await postJson("/api/ask", { question });
     appendChatMessage("user", question);
-    appendChatMessage("assistant", data.answer, data.sources);
+    appendChatMessage("assistant", data.answer);
     setStatus(askStatus, "", "");
     askInput.value = "";
   } catch (err) {
